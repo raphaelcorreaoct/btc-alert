@@ -1,20 +1,40 @@
 {
   "name": "bitcoin-alert",
   "version": "0.1.0",
+  "homepage": "./",
+  "main": "./electron.js",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",
     "@testing-library/user-event": "^13.5.0",
+    "babel-preset-electron": "^1.4.15",
+    "babel-register": "^6.26.0",
+    "concurrently": "^7.1.0",
+    "electron": "^18.2.0",
+    "electron-packager": "^15.5.1",
+    "electron-renderer": "^2.0.4",
+    "firebase": "^9.6.11",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
+    "react-router": "^6.3.0",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "wait-on": "^6.0.1",
     "web-vitals": "^2.1.4"
   },
+  "devDependencies": {
+    "electron-builder": "^23.0.3",
+    "tailwindcss": "^3.0.24"
+  },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "react-start": "react-scripts start",
+    "electron-start": "electron .",
+    "start": "concurrently 'yarn react-start' 'wait-on http://localhost:3000/ && yarn electron-start'",
+    "react-build": "react-scripts build",
+    "electron-build": "electron-packager ./build --overwrite",
+    "build": "yarn react-build && yarn electron-build",
+    "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
