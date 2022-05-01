@@ -10,33 +10,37 @@ const MIN_ETC = 27500;
 const msg = {
   ETH: {
     title: "COMPRAR ETH",
-    message: `Ta na hora de comprar ETH menor ou iguau${MIN_ETC}`,
+    message: `Ta na hora de comprar ETH menor ou iguau ${MIN_ETC}`,
   },
   BTC: {
     title: "COMPRAR BTV",
-    message: `Ta na hora de comprar BTC menor ou iguau${MIN_BTC}`,
+    message: `Ta na hora de comprar BTC menor ou iguau ${MIN_BTC}`,
   },
 };
 
 const response = (data, currency) => {
-  const $ = cheerio.load(data); // Initialize cheerio
-  const value = Number(
-    $("#last_last").text().replace(".", "").replace(",", ".")
-  );
+  try {
+    const $ = cheerio.load(data); // Initialize cheerio
+    const value = Number(
+      $("#last_last").text().replace(".", "").replace(",", ".")
+    );
 
-  if (MIN_BTC <= value) {
-    notifier.notify(msg[currency]);
+    if (MIN_BTC <= value) {
+      notifier.notify(msg[currency]);
+    }
+
+    if (MIN_ETC <= value) {
+      notifier.notify(msg[currency]);
+    }
+
+    if (!isNaN(value))
+      addNewValue({
+        currency,
+        value,
+      });
+  } catch (error) {
+    console.log(error);
   }
-
-  if (MIN_ETC <= value) {
-    notifier.notify(msg[currency]);
-  }
-
-  if (!isNaN(value))
-    addNewValue({
-      currency,
-      value,
-    });
 };
 
 setInterval(() => {
@@ -46,4 +50,4 @@ setInterval(() => {
   axios.get("https://br.investing.com/crypto/ethereum").then(({ data }) => {
     response(data, "ETH");
   });
-}, 1000 * 60);
+}, 100 * 60);
